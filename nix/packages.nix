@@ -1,8 +1,10 @@
-{ wrapNeovimUnstable, neovim-unwrapped, neovimUtils, ... }:
-let config = neovimUtils.makeNeovimConfig { };
+{ wrapNeovimUnstable, neovim-unwrapped, neovimUtils, ... }@pkgs:
+let
+  inherit (import ./vimetal.nix pkgs) vimetal;
+  config = neovimUtils.makeNeovimConfig { };
 in {
+  inherit vimetal;
   neovim = (wrapNeovimUnstable neovim-unwrapped config).overrideAttrs {
-    # .lua loading compiled lib goes here i guess?
-    generatedWrapperArgs = [ ];
+    generatedWrapperArgs = [ "--add-flags" "-u ${vimetal}/init.lua" ];
   };
 }

@@ -1,13 +1,11 @@
 [package]
 name = "vimetal"
-version = "0.1.0"
+version = "0.0.1"
 edition = "2021"
 
 [lib]
 crate-type = ["cdylib"]
 
 [dependencies]
-nvim-oxi = "0.5.1"
-
-[profile.release]
-lto = true
+mlua = { version = "0.10.1", features = ["luajit"] }
+nvim-oxi = { version = "0.5.1", features = ["mlua", "neovim-0-10"] }

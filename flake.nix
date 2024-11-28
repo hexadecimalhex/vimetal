@@ -18,8 +18,18 @@
           toolchain = pkgs.pkgsBuildHost.rust-bin.fromRustupToolchainFile
             ./rust-toolchain.toml;
         in {
-          devShells.default =
-            pkgs.mkShell { packages = with pkgs; [ toolchain just bacon nil nixfmt-classic taplo ]; };
+          devShells.default = pkgs.mkShell {
+            packages = let
+              buildDeps = with pkgs; [ pkg-config luajit ];
+              developmentDeps = with pkgs; [
+                just
+                bacon
+                nil
+                nixfmt-classic
+                taplo
+              ];
+            in [ toolchain ] ++ buildDeps ++ developmentDeps;
+          };
           packages = import ./nix/packages.nix pkgs;
         };
     };
