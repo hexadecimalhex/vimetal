@@ -3,3 +3,6 @@ _default:
 
 watch:
   bacon clippy
+
+run:
+  nix run .#neovim -- .

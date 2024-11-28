@@ -20,6 +20,7 @@
         in {
           devShells.default =
             pkgs.mkShell { packages = with pkgs; [ toolchain just bacon nil nixfmt-classic taplo ]; };
+          packages = import ./nix/packages.nix pkgs;
         };
     };
 }
