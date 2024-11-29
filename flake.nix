@@ -2,12 +2,13 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/release-24.11";
     parts.url = "github:hercules-ci/flake-parts";
+    naersk.url = "github:nix-community/naersk";
     rust = {
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = inputs@{ nixpkgs, parts, rust, ... }:
+  outputs = inputs@{ nixpkgs, parts, rust, naersk, ... }:
     parts.lib.mkFlake { inherit inputs; } {
       systems = [ "x86_64-linux" "aarch64-linux" ];
 
@@ -17,6 +18,10 @@
           pkgs = import nixpkgs { inherit system overlays; };
           toolchain = pkgs.pkgsBuildHost.rust-bin.fromRustupToolchainFile
             ./rust-toolchain.toml;
+          naersk-lib = pkgs.callPackage naersk {
+            cargo = toolchain;
+            rustc = toolchain;
+          };
         in {
           devShells.default = pkgs.mkShell {
             packages = let
@@ -30,7 +35,8 @@
               ];
             in [ toolchain ] ++ buildDeps ++ developmentDeps;
           };
-          packages = import ./nix/packages.nix pkgs;
+          packages =
+            import ./nix/packages.nix (pkgs // { inherit naersk-lib; });
         };
     };
 }
