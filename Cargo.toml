@@ -7,5 +7,5 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
-mlua = { version = "0.10.1", features = ["luajit"] }
+mlua = { version = "0.10.1", features = ["luajit", "macros"] }
 nvim-oxi = { version = "0.5.1", features = ["mlua", "neovim-0-10"] }
